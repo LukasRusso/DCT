@@ -1,9 +1,9 @@
 var config = require('../config.json');
-var Q = require('q');
+var Q = require('../../node_modules/q');
 var connection = process.env.connectionStringV2 || config.connectionStringV2;
 var database = process.env.databaseV2 || config.databaseV2;
-const ObjID = require('mongodb').ObjectId;
-const mongo = require('mongodb').MongoClient;
+const ObjID = require('../../node_modules/mongodb').ObjectId;
+const mongo = require('../../node_modules/mongodb').MongoClient;
 mongo.connect(connection, { useUnifiedTopology: true })
     .then(conn => global.conn = conn.db(database))
     .catch(err => console.log(err));
