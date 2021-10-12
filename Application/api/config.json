@@ -1,0 +1,6 @@
+{
+    "connectionString": "mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false",
+    "connectionStringV2": "mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false",
+    "databaseV2":"mongo-sample",
+    "port": 9090
+}
