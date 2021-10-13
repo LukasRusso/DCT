@@ -11,6 +11,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
+var routes = require('./routes/index');
+var users = require('./routes/users');
 
 var server; 
 var app = express();
@@ -28,7 +30,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-//app.use('/', (req, res) => { res.redirect("/api-docs"); });
+app.use('/', routes);
+app.use('/users', users);
 
 // Essa configuração na API indica que haverá JWT para cada endpoint / rota método, com exceção dos métodos
 // de autenticação, registro de usuários e sobre. Essa camada de segurança é muito boa, porque ajuda
