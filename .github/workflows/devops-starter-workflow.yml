@@ -34,7 +34,7 @@ jobs:
         npm run build --if-present
 
     - name: Run unit tests
-      continue-on-error: false
+      continue-on-error: true
       run: |
         cd Tests
         npm install
