@@ -2,8 +2,8 @@ var config = require('../config.json');
 var lodash = require('../../node_modules/lodash');
 var bcrypt = require('../../node_modules/bcryptjs');
 var Q = require('../../node_modules/q');
-var connection = process.env.connectionStringV2 || config.connectionStringV2;
-var database = process.env.databaseV2 || config.databaseV2;
+var connection = process.env.connectionString || config.connectionString;
+var database = process.env.database || config.database;
 const ObjID = require('../../node_modules/mongodb').ObjectId;
 const mongo = require('../../node_modules/mongodb').MongoClient;
 mongo.connect(connection, { useUnifiedTopology: true })
