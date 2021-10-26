@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var historyService = require('services/user_history.service');
+var historyService = require('../services/user_history.service');
 
 // routes
 router.post('/', createHistoryPerson);

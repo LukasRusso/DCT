@@ -1,7 +1,7 @@
 const { response } = require('express');
 var express = require('express');
 var router = express.Router();
-var person = require('services/person.service');
+var person = require('../services/person.service');
 
 // routes
 router.post('/', createPerson);

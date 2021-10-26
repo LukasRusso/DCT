@@ -1,6 +1,6 @@
 var express = require('express')
 var router = express.Router()
-var user = require('services/user.service')
+var user = require('../services/user.service')
 
 // routes
 router.post('/', createUser)

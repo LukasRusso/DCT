@@ -1,4 +1,4 @@
-var config = require('config.json');
+var config = require('../config.json');
 var Q = require('q');
 var lodash = require('lodash');
 var connection = process.env.connectionStringV2 || config.connectionStringV2;

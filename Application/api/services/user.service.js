@@ -1,4 +1,4 @@
-var config = require('config.json');
+var config = require('../config.json');
 var lodash = require('lodash');
 var bcrypt = require('bcryptjs');
 var Q = require('q');

@@ -1,6 +1,6 @@
 var express = require('express')
 var router = express.Router()
-var questionService = require('services/question.service')
+var questionService = require('../services/question.service')
 
 // routes
 router.post('/', createQuestion)

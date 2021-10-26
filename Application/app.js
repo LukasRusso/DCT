@@ -77,7 +77,7 @@ app.use(function (err, req, res, next) {
     });
 });
 
-app.set('port', process.env.PORT || 3030);
+app.set('port', process.env.PORT || config.PORT);
 
 exports.listen = function () {
     server = app.listen(app.get('port'), function () {
