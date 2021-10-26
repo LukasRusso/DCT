@@ -41,10 +41,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {explorer: true}));
 
 //roteamento das API as devidas controllers
-app.use('/api/userHistory', require('./controllers/api/user_history.controller'));
-app.use('/api/user', require('./controllers/api/user.controller'));
-app.use('/api/person', require('./controllers/api/person.controller'));
-app.use('/api/questions', require('./controllers/api/questions.controller'));
+app.use('/api/userHistory', require('./api/controllers/user_history.controller'));
+app.use('/api/user', require('./api/controllers/user.controller'));
+app.use('/api/person', require('./api/controllers/person.controller'));
+app.use('/api/questions', require('./api/controllers/questions.controller'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
