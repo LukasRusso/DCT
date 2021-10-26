@@ -24,7 +24,9 @@
     "pug": "^2.0.0-beta6",
     "q": "^1.5.1",
     "rootpath": "^0.1.2",
-    "serve-favicon": "^2.3.0"    
+    "serve-favicon": "^2.3.0",
+    "swagger-express-router": "^1.0.0",
+    "swagger-ui-express": "^4.1.6"
   },
   "engines": {
     "node": "~6.10.x"
