@@ -1,7 +1,5 @@
 {
-    "connectionString": "mongodb+srv://DCT_LP_IV:z9z9kaiisK9Ss%40-@dct.luyii.mongodb.net/test?authSource=admin&replicaSet=atlas-9rkpxx-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true",
-    "database":"DTC",
-    "port": 9090,
-    "user": "DCT_LP_IV",
-    "pass": "z9z9kaiisK9Ss%40-"
+    "connectionString": "",
+    "database":"",
+    "port": 9090
 }

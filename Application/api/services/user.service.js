@@ -1,12 +1,14 @@
-var config = require('../config.json');
+var config = require('config.json');
 var lodash = require('lodash');
 var bcrypt = require('bcryptjs');
 var Q = require('q');
-var stringConnection = process.env.connectionString || config.connectionString;
-var database = process.env.database || config.database;
-const mongoose = require('mongoose')
-var connection = mongoose.createConnection(stringConnection, { useNewUrlParser: true, useUnifiedTopology: true })
-connection.database = database;
+var connection = process.env.connectionStringV2 || config.connectionStringV2;
+var database = process.env.databaseV2 || config.databaseV2;
+const ObjID = require('mongodb').ObjectId;
+const mongo = require('mongodb').MongoClient;
+mongo.connect(connection, { useUnifiedTopology: true })
+    .then(conn => global.conn = conn.db(database))
+    .catch(err => console.log(err));
 
 var service = {};
 service.createUser = createUser;
@@ -19,7 +21,7 @@ module.exports = service;
 //Cria um user para login do usuário
 function createUser(user) {
     var deferred = Q.defer();    
-    var userDB = connection.collection("user");    
+    var userDB = global.conn.collection("user");
 
     if (!(Object.keys(user).includes("email") && Object.keys(user).includes("senha")))  
         deferred.reject("The User must have email and senha!")
@@ -58,7 +60,7 @@ function create(user, userDB, deferred) {
 //Atualiza os dados do usuário, como campo e senha
 function updateUser(user) {
     var deferred = Q.defer();
-    var userDB = connection.collection("user");    
+    var userDB = global.conn.collection("user");
 
     if (!(Object.keys(user).includes("_id") && Object.keys(user).includes("email") && Object.keys(user).includes("senha")))  
         deferred.reject("Incorrect parameters, please check!")
@@ -97,34 +99,30 @@ function update(user, userDB, deferred) {
 
 //Insere uma historia de usuario, se o body for preenchido
 function loginUser(user) {
-    try {
-        var deferred = Q.defer();            
-        var userDB = connection.collection("user");    
+    var deferred = Q.defer();
+    var userDB = global.conn.collection("user");
 
-        if (!(Object.keys(user).includes("email") && Object.keys(user).includes("senha")))  
-            deferred.reject("The User must have 'email' and 'senha'!")
-        else
-        {
-            userDB.findOne({email: user.email}, function (err, doc) {
-                    if (err) deferred.reject(err.name + ': ' + err.message);
+    if (!(Object.keys(user).includes("email") && Object.keys(user).includes("senha")))  
+        deferred.reject("The User must have 'email' and 'senha'!")
+    else
+    {
+        userDB.findOne({email: user.email}, function (err, doc) {
+                if (err) deferred.reject(err.name + ': ' + err.message);
 
-                    if(doc && bcrypt.compareSync(user.senha, doc.hash))
-                        deferred.resolve("User Authenticated!");
-                    else
-                        deferred.reject("Incorrect username or password.");                  
-                });            
-        }
+                if(doc && bcrypt.compareSync(user.senha, doc.hash))
+                    deferred.resolve("User Authenticated!");
+                else
+                    deferred.reject("Incorrect username or password.");                  
+            });            
+    }
 
-        return deferred.promise;
-    } catch (error) {
-        console.log(error)
-    }    
+    return deferred.promise;
 }
 
 //Deleta os dados de login do usuário
 function deleteUser(user) {
     var deferred = Q.defer();
-    var userDB = connection.collection("user");    
+    var userDB = global.conn.collection("user");
 
     if (!Object.keys(user).includes("_id"))  
         deferred.reject("The User must have _id!")
