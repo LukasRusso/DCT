@@ -6,6 +6,7 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: "DCT"    # set this to your application's name
+  AZURE_WEBAPP_NAME_PRD: "OfficialBaseTech"    # set this for name of production API
   AZURE_WEBAPP_PACKAGE_PATH: "Application"      # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '14.16.0'                        # set this to the node version to use
   RESOURCEGROUPNAME: "DCT-rg"
@@ -74,6 +75,7 @@ jobs:
   DeployQA:
     name: Deploy to azure web app QA
     needs: build
+    environment: QA
     runs-on: ubuntu-latest
     steps:
     # Downloading build artifact
@@ -127,12 +129,13 @@ jobs:
 
   deployPRD:
     needs: [DeployQA]    
+    environment: PROD
     runs-on: ubuntu-latest
     steps:
       - name: 'Deploy to Azure WebApp PRD'
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME}}
+          app-name: ${{ env.AZURE_WEBAPP_NAME_PRD}}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PRD}}
           
