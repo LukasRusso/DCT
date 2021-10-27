@@ -8,6 +8,7 @@ env:
   AZURE_WEBAPP_NAME: "DCT"    # set this to your application's name
   AZURE_WEBAPP_NAME_PRD: "OfficialBaseTech"    # set this for name of production API
   AZURE_WEBAPP_PACKAGE_PATH: "Application"      # set this to the path to your web app project, defaults to the repository root
+  AZURE_WEBAPP_PACKAGE_PATH: "/home/site/wwwroot"
   NODE_VERSION: '14.16.0'                        # set this to the node version to use
   RESOURCEGROUPNAME: "DCT-rg"
   LOCATION: "South Central US"
