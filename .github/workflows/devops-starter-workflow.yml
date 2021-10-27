@@ -73,7 +73,7 @@ jobs:
     #     path: deploymenttemplates
 
   DeployQA:
-    name: Deploy to azure web app QA
+    name: Deploy to Azure WebApp QA
     needs: build
     environment: QA
     runs-on: ubuntu-latest
@@ -128,6 +128,7 @@ jobs:
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
   deployPRD:
+    name: Deploy to Azure WebApp PRD
     needs: [DeployQA]    
     environment: PROD
     runs-on: ubuntu-latest
@@ -136,7 +137,7 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME_PRD}}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          package: "."
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PRD}}
           
 
