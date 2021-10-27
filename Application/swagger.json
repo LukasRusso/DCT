@@ -6,7 +6,7 @@
         "version": "1.0"
     },
     "produces": ["application/json"],
-    "host": "https://dct.azurewebsites.net",
+    "host": "dct.azurewebsites.net",
     "basePath": "/api",
     "paths": {
         "/user": {
