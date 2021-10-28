@@ -10,12 +10,14 @@ var express = require('express');
 //var expressJwt = require('express-jwt');
 var config = require("./config.json");
 var cors = require('cors');
+var expressJwt = require('express-jwt');
 
 // Criação da API e indicação que trabalha com JSON
 var api = express();
 api.use(cors());
 api.use(express.urlencoded());
 api.use(express.json());
+api.use('/api', expressJwt({ secret: process.env.secret || config.secret }).unless({ path: ['/api/about','/api/user/authenticate', '/api/user/register'] }));
 
 
 // Essa configuração na API indica que haverá JWT para cada endpoint / rota método, com exceção dos métodos
