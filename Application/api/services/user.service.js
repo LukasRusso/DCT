@@ -1,5 +1,6 @@
 var config = require('../config.json');
 var lodash = require('lodash');
+var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var Q = require('q');
 var connection = process.env.connectionStringV2 || config.connectionStringV2;
@@ -15,8 +16,28 @@ service.createUser = createUser;
 service.loginUser = loginUser;
 service.updateUser = updateUser;
 service.deleteUser = deleteUser;
+service.authenticate = authenticate;
     
 module.exports = service;
+
+
+function authenticate(username, password) {
+    var deferred = Q.defer();
+
+    db.users.findOne({ username: username }, function (err, user) {
+        if (err) deferred.reject(err.name + ': ' + err.message);
+
+        if (user && bcrypt.compareSync(password, user.hash)) {
+            // authentication successful
+            deferred.resolve({token :jwt.sign({ sub: user._id }, config.secret), userId: user._id});
+        } else {
+            // authentication failed
+            deferred.resolve();
+        }
+    });
+
+    return deferred.promise;
+}
 
 //Cria um user para login do usuário
 function createUser(user) {

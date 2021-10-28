@@ -7,6 +7,7 @@ router.post('/', createUser)
 router.get('/', loginUser)
 router.put('/', updateUser)
 router.delete('/', deleteUser)
+router.post('/authenticate', authenticateUser);
 
 module.exports = router
 
@@ -19,6 +20,22 @@ function createUser(req, res) {
     .catch(function (err) {
       res.status(400).send(err)
     })
+}
+
+function authenticateUser(req, res) {
+  userService.authenticate(req.body.username, req.body.password)
+      .then(function (response) {
+          if (response) {
+              // authentication successful
+              res.send({ userId: response.userId, token: response.token });
+          } else {
+              // authentication failed
+              res.status(401).send('Usuário e/ou senha inválidos');
+          }
+      })
+      .catch(function (err) {
+          res.status(400).send(err);
+      });
 }
 
 function loginUser(req, res) {
