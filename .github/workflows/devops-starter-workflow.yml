@@ -127,21 +127,39 @@ jobs:
       with: 
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-
-  deployPRD:
+          
+ deployPRD:
     name: Deploy to Azure WebApp PRD
-    needs: [DeployQA]    
+    needs: [DeployQA]   
     environment: PROD
     runs-on: ubuntu-latest
     steps:
-      - name: 'Deploy to Azure WebApp PRD'
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME_PRD}}
-          package: "${{ env.AZURE_WEBAPP_PACKAGE_PATH_PRD}}"
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PRD}}
-          
+    # Downloading build artifact
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v2
+      continue-on-error: false
+      with:
+        name: buildartifacts
+        path: buildartifacts
 
+    # Uzipping build artifacts
+    - name: unzipping build artifact
+      run: |
+        unzip -qq ./buildartifacts/Application.zip -d .
+
+    # Login to azure
+    - name: Login to Azure
+      uses: azure/login@v1
+      continue-on-error: false
+      with:
+        creds: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PRD }}
+
+    # Deploy web app on azure
+    - name: 'Deploy to Azure WebApp'
+      uses: azure/webapps-deploy@v2
+      with: 
+        app-name: ${{ env.AZURE_WEBAPP_NAME_PRD }}
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
   # Job to run functional tests
   # FunctionalTests:
