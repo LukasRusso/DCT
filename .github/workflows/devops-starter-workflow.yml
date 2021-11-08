@@ -147,18 +147,13 @@ jobs:
       run: |
         unzip -qq ./buildartifacts/Application.zip -d .
 
-    # Login to azure
-    - name: Login to Azure
-      uses: azure/login@v1
-      continue-on-error: false
-      with:
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PRD}}
     # Deploy web app on azure
     - name: 'Deploy to Azure WebApp'
       uses: azure/webapps-deploy@v2
       with: 
         app-name: ${{ env.AZURE_WEBAPP_NAME_PRD }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PRD}}
 
   # Job to run functional tests
   # FunctionalTests:
