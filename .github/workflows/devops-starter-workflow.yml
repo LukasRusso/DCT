@@ -8,7 +8,6 @@ env:
   AZURE_WEBAPP_NAME: "DCT"    # set this to your application's name
   AZURE_WEBAPP_NAME_PRD: "OfficialBaseTech"    # set this for name of production API
   AZURE_WEBAPP_PACKAGE_PATH: "Application"      # set this to the path to your web app project, defaults to the repository root
-  AZURE_WEBAPP_PACKAGE_PATH_PRD: "./home"
   NODE_VERSION: '14.16.0'                        # set this to the node version to use
   RESOURCEGROUPNAME: "DCT-rg"
   LOCATION: "South Central US"
@@ -34,17 +33,10 @@ jobs:
         cd Application
         npm install
         npm run build --if-present
-
-    # - name: Run unit tests
-    #   continue-on-error: true
-    #   run: |
-    #     cd Tests
-    #     npm install
         
     - name: Creating artifact directories
       run: |
         mkdir buildartifacts
-      # mkdir deploymenttemplates
 
     # Archive build artifact
     - name: Archive Application
@@ -59,20 +51,6 @@ jobs:
         name: buildartifacts
         path: buildartifacts
 
-    # Archive Arm templates
-    # - name: Archive ArmTemplates
-    #   uses: montudor/action-zip@v0.1.0
-    #   with:
-    #     args: zip -qq -r ./deploymenttemplates/armtemplates.zip ./armTemplates
-
-    # Uploading Arm Templates to artifacts
-    # - name: Upload Arm templates to Artifact
-    #   continue-on-error: false
-    #   uses: actions/upload-artifact@v2
-    #   with:
-    #     name: deploymenttemplates
-    #     path: deploymenttemplates
-
   DeployQA:
     name: Deploy to Azure WebApp QA
     needs: build
@@ -86,24 +64,10 @@ jobs:
       with:
         name: buildartifacts
         path: buildartifacts
-
     # Uzipping build artifacts
     - name: unzipping build artifact
       run: |
         unzip -qq ./buildartifacts/Application.zip -d .
-
-  # Downloading Arm Templates
-    # - name: Download an Arm template
-    #   uses: actions/download-artifact@v2
-    #   continue-on-error: false
-    #   with:
-    #     name: deploymenttemplates
-    #     path: deploymenttemplates
-
-    # Uzipping Arm template directory
-    # - name: unzipping arm artifact
-    #   run: |
-    #     unzip -qq ./deploymenttemplates/armtemplates.zip -d .
 
     # Login to azure
     - name: Login to Azure
@@ -111,17 +75,7 @@ jobs:
       continue-on-error: false
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    # Deploy Arm template
-    # - name: Deploy ARM Template
-    #   uses: azure/CLI@v1
-    #   continue-on-error: false
-    #   with:
-    #     inlineScript: |
-    #       az group create --name "${{ env.RESOURCEGROUPNAME }}" --location "${{ env.LOCATION }}"
-    #       az deployment group create --resource-group "${{ env.RESOURCEGROUPNAME }}" --template-file ./armTemplates/windows-webapp-template.json --parameters webAppName="${{ env.AZURE_WEBAPP_NAME }}" hostingPlanName="${{ env.HOSTINGPLANNAME }}" appInsightsLocation="${{ env.APPINSIGHTLOCATION }}" sku="${{ env.SKU }}"
-    
-    # Deploy web app on azure
+     # Deploy web app on azure
     - name: 'Deploy to Azure WebApp'
       uses: azure/webapps-deploy@v2
       with: 
@@ -141,12 +95,10 @@ jobs:
       with:
         name: buildartifacts
         path: buildartifacts
-
     # Uzipping build artifacts
     - name: unzipping build artifact
       run: |
         unzip -qq ./buildartifacts/Application.zip -d .
-
     # Deploy web app on azure
     - name: 'Deploy to Azure WebApp'
       uses: azure/webapps-deploy@v2
@@ -154,26 +106,3 @@ jobs:
         app-name: ${{ env.AZURE_WEBAPP_NAME_PRD }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PRD}}
-
-  # Job to run functional tests
-  # FunctionalTests:
-  #   name: Run Functional tests
-  #   runs-on: windows-latest
-  #   needs: Deploy
-  #   steps:
-  #   - uses: actions/checkout@v2
-
-  #   - name: Use Node.js ${{ env.NODE_VERSION }}
-  #     uses: actions/setup-node@v1
-  #     with:
-  #       node-version: ${{ env.NODE_VERSION }}
-
-  #   # Run functional tests
-  #   - name: Run Functional Tests
-  #     continue-on-error: true
-  #     run: |
-  #       cd Application
-  #       npm install
-  #       cd ../Tests
-  #       npm install
-  #       gulp functionaltest --webAppUrl https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/
