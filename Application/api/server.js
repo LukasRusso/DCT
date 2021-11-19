@@ -11,10 +11,15 @@ var express = require('express');
 var config = require("./config.json");
 var cors = require('cors');
 var expressJwt = require('express-jwt');
-
+const corsOptions ={
+    origin:'*', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200,
+ }
+ 
 // Criação da API e indicação que trabalha com JSON
 var api = express();
-api.use(cors());
+api.use(cors(corsOptions));
 api.use(express.urlencoded());
 api.use(express.json());
 api.use('/api', expressJwt({ secret: process.env.secret || config.secret }).unless({ path: ['/api/about','/api/user/authenticate', '/api/user/register'] }));
