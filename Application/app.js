@@ -49,7 +49,7 @@ app.use('/api/forum', require('./api/controllers/forum.controller'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    res.redirect("/api-docs");
+    res.redirect("/api/docs");
 });
 
 // error handlers
