@@ -23,7 +23,7 @@ function createUser(req, res) {
 }
 
 function authenticateUser(req, res) {
-  userService.authenticate(req.body.username, req.body.password)
+  user.authenticate(req.body.username, req.body.password)
       .then(function (response) {
           if (response) {
               // authentication successful
@@ -39,20 +39,21 @@ function authenticateUser(req, res) {
 }
 
 function loginUser(req, res) {
-  res.status(200).send("Teste login")
-  // user
-  //   .loginUser(req.query)
-  //   .then(function (login) {
-  //     if (login) {
-  //       res.send(login)
-  //       res.sendStatus(200)
-  //     } else {
-  //       res.sendStatus(404)
-  //     }
-  //   })
-  //   .catch(function (err) {
-  //     res.status(400).send(err)
-  //   })
+  
+  console.log(req.query);
+  
+  user.loginUser(req.query)
+    .then(function (login) {
+      if (login) {
+        res.send(login)
+        res.sendStatus(200)
+      } else {
+        res.sendStatus(404)
+      }
+    })
+    .catch(function (err) {
+      res.status(400).send(err)
+    })
 }
 
 function updateUser(req, res) {

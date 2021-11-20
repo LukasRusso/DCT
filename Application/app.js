@@ -11,7 +11,16 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
-//var users = require('./routes/users');
+var expressJwt = require('express-jwt');
+var config = require("./api/config.json");
+var cors = require('cors');
+const corsOptions = {
+    origin:'*', 
+    credentials: true,            //access-control-allow-credentials:true
+    optionSuccessStatus: 200,
+ }
+
+var expressJwt = require('express-jwt');
 
 var server; 
 var app = express();
@@ -22,27 +31,25 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
+//app.use(cors(corsOptions));
 
-// Essa configuração na API indica que haverá JWT para cada endpoint / rota método, com exceção dos métodos
-// de autenticação, registro de usuários e sobre. Essa camada de segurança é muito boa, porque ajuda
-// na diminuição do tratamento de mensagens indevidas na aplicação
-//api.use('/api', expressJwt({ secret: process.env.secret || config.secret }).unless({ path: ['/api/about','/api/users/authenticate', '/api/users/register'] }));
+//authentication
+//app.use('/api', expressJwt({ secret: process.env.secret || config.secret }).unless({ path: ['./api/user/authenticate', './api/user/register'] }));
 
 //documentação das APIs
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {explorer: true}));
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {explorer: true}));
 
 //roteamento das API as devidas controllers
 app.use('/api/userHistory', require('./api/controllers/user_history.controller'));
 app.use('/api/user', require('./api/controllers/user.controller'));
 app.use('/api/person', require('./api/controllers/person.controller'));
 app.use('/api/questions', require('./api/controllers/questions.controller'));
+app.use('/api/forum', require('./api/controllers/forum.controller'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     res.redirect("/api-docs");
-    // var err = new Error('Not Found');
-    // err.status = 404;
-    // next(err);
 });
 
 // error handlers
@@ -58,16 +65,19 @@ if (app.get('env') === 'development') {
         });
     });
 }
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function (err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
+else 
+{
+    // production error handler
+    // no stacktraces leaked to user
+    app.use(function (err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', {
+            message: err.message,
+            error: {}
+        });
     });
-});
+}
+
 
 app.set('port', process.env.PORT || 3030);
 
