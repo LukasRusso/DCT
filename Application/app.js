@@ -16,7 +16,7 @@ var config = require("./api/config.json");
 var cors = require('cors');
 const corsOptions = {
     origin:'*', 
-    credentials: true,            //access-control-allow-credentials:true
+    credentials: false,            //access-control-allow-credentials:true somente quando as credenciais tiverem liberadas
     optionSuccessStatus: 200,
  }
 
@@ -31,8 +31,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors());
-//app.use(cors(corsOptions));
+//app.use(cors());
+app.use(cors(corsOptions));
 
 //authentication
 //app.use('/api', expressJwt({ secret: process.env.secret || config.secret }).unless({ path: ['./api/user/authenticate', './api/user/register'] }));
