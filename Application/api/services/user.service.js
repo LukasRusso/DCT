@@ -21,13 +21,14 @@ service.authenticate = authenticate;
 module.exports = service;
 
 
-function authenticate(username, password) {
+function authenticate(email, senha) {
     var deferred = Q.defer();
     var userDB = global.conn.collection("user");
-    userDB.findOne({ username: username }, function (err, user) {
+
+    userDB.findOne({ email: email }, function (err, user) {
         if (err) deferred.reject(err.name + ': ' + err.message);
 
-        if (user && bcrypt.compareSync(password, user.hash)) {
+        if (user && bcrypt.compareSync(senha, user.hash)) {
             // authentication successful
             deferred.resolve({token :jwt.sign({ sub: user._id }, config.secret), userId: user._id});
         } else {

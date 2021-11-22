@@ -46,6 +46,7 @@ app.use('/api/user', require('./api/controllers/user.controller'));
 app.use('/api/person', require('./api/controllers/person.controller'));
 app.use('/api/questions', require('./api/controllers/questions.controller'));
 app.use('/api/forum', require('./api/controllers/forum.controller'));
+app.use('/api/comments', require('./api/controllers/forumComments.controller'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

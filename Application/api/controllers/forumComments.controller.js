@@ -1,19 +1,20 @@
 const { response } = require('express');
 var express = require('express');
 var router = express.Router();
-var forum = require('../services/forum.service');
+var forumComments = require('../services/forumComments.service');
 
 // routes
-router.post('/', createAssunto);
-router.get('/', getAllForum);
-router.get('/:id', getAssunto);
-router.put('/', updateAssunto);
-router.delete('/', deleteAssunto)
+router.post('/', createComment);
+router.get('/', getComment);
+router.get('/', getAllCommentAssunto);
+router.put('/:id', updateComment);
+router.delete('/', deleteComment)
+
 
 module.exports = router;
 
-function createAssunto(req, res){
-    forum.createAssunto(req.body)
+function createComment(req, res){
+    forumComments.createComment(req.body)
         .then(function () {
             res.sendStatus(201)
         })
@@ -22,22 +23,8 @@ function createAssunto(req, res){
         });
 }
 
-function getAllForum(req, res){
-    if ("topico" in req.query) 
-        getTopico(req, res);
-    else {
-        forum.getAllForum()
-            .then(function (listForum) {
-                res.send(listForum).status(200);
-            })
-            .catch(function (err) {
-                res.status(400).send(err)
-            });
-    }    
-}
-
-function getTopico(req, res){
-    forum.getTopico(req.query.topico)
+function getComment(req, res){
+    forumComments.getComment()
         .then(function (listTopico) {
             res.send(listTopico).status(200);
         })
@@ -46,8 +33,8 @@ function getTopico(req, res){
         });
 }
 
-function getAssunto(req, res){
-    forum.getAssunto(req.params.id)
+function getAllCommentAssunto(req, res){
+    forumComments.getAllCommentAssunto(req.params.id)
         .then(function (listAssunto) {
             res.send(listAssunto).status(200);
         })
@@ -56,8 +43,8 @@ function getAssunto(req, res){
         });
 }
 
-function updateAssunto(req, res){
-    forum.updateAssunto(req.body)
+function updateComment(req, res){
+    forumComments.updateComment(req.body)
         .then(function () {
             res.sendStatus(201)
         })
@@ -66,8 +53,8 @@ function updateAssunto(req, res){
         });
 }
 
-function deleteAssunto(req, res){
-    forum.deleteAssunto()
+function deleteComment(req, res){
+    forumComments.deleteComment()
         .then(function () {
             res.sendStatus(204)
         })

@@ -23,7 +23,7 @@ function createUser(req, res) {
 }
 
 function authenticateUser(req, res) {
-  user.authenticate(req.body.username, req.body.password)
+  user.authenticate(req.body.email, req.body.senha)
       .then(function (response) {
           if (response) {
               // authentication successful
@@ -39,9 +39,6 @@ function authenticateUser(req, res) {
 }
 
 function loginUser(req, res) {
-  
-  console.log(req.query);
-  
   user.loginUser(req.query)
     .then(function (login) {
       if (login) {
