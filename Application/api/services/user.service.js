@@ -23,8 +23,8 @@ module.exports = service;
 
 function authenticate(username, password) {
     var deferred = Q.defer();
-
-    db.users.findOne({ username: username }, function (err, user) {
+    var userDB = global.conn.collection("user");
+    userDB.findOne({ username: username }, function (err, user) {
         if (err) deferred.reject(err.name + ': ' + err.message);
 
         if (user && bcrypt.compareSync(password, user.hash)) {
